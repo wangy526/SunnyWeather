@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Chapter15SunnyWeather</string>
+    <string name="app_name">SunnyWeather</string>
+    <string name="input_place">输入地址</string>
 </resources>
