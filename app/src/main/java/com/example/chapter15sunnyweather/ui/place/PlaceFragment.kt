@@ -18,17 +18,18 @@ import com.example.chapter15sunnyweather.showToast
  * @date: 2023/8/18
  * @description：PlaceFragment
  */
-class PlaceFragment :Fragment() {
+class PlaceFragment : Fragment() {
 
-    lateinit var mBinding:FragmentPlaceBinding
+    lateinit var mBinding: FragmentPlaceBinding
     private lateinit var adapter: PlaceAdapter
+
     //使用懒加载,随便使用viewModel这个变量
     val viewModel by lazy { ViewModelProvider(this).get(PlaceViewModel::class.java) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         mBinding = FragmentPlaceBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -36,30 +37,30 @@ class PlaceFragment :Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val layoutManager=LinearLayoutManager(activity)
-        mBinding.recycleView.layoutManager=layoutManager
-        adapter= PlaceAdapter(this,viewModel.placeList)
-        mBinding.recycleView.adapter=adapter
-        mBinding.searchPlaceEdit.addTextChangedListener { editable->
-            val content=editable.toString()
-            if(content.isNotEmpty()){
+        val layoutManager = LinearLayoutManager(activity)
+        mBinding.recycleView.layoutManager = layoutManager
+        adapter = PlaceAdapter(this, viewModel.placeList)
+        mBinding.recycleView.adapter = adapter
+        mBinding.searchPlaceEdit.addTextChangedListener { editable ->
+            val content = editable.toString()
+            if (content.isNotEmpty()) {
                 viewModel.searchPlaces(content)
-            }else{
-                mBinding.recycleView.visibility=View.GONE
-                mBinding.bgImageView.visibility=View.VISIBLE
+            } else {
+                mBinding.recycleView.visibility = View.GONE
+                mBinding.bgImageView.visibility = View.VISIBLE
                 viewModel.placeList.clear()
                 adapter.notifyDataSetChanged()
             }
         }
-        viewModel.placeLiveData.observe(viewLifecycleOwner, Observer { result->
-            val places=result.getOrNull()
-            if (places!=null){
-                mBinding.recycleView.visibility=View.VISIBLE
-                mBinding.bgImageView.visibility=View.GONE
+        viewModel.placeLiveData.observe(viewLifecycleOwner, Observer { result ->
+            val places = result.getOrNull()
+            if (places != null) {
+                mBinding.recycleView.visibility = View.VISIBLE
+                mBinding.bgImageView.visibility = View.GONE
                 viewModel.placeList.clear()
                 viewModel.placeList.addAll(places)
                 adapter.notifyDataSetChanged()
-            }else{
+            } else {
                 "未能查询到任何地点".showToast(Toast.LENGTH_SHORT)
                 result.exceptionOrNull()?.printStackTrace()
             }
