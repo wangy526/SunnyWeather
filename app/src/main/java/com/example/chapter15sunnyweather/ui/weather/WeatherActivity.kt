@@ -1,14 +1,20 @@
 package com.example.chapter15sunnyweather.ui.weather
 
+import android.content.Context
 import android.graphics.Color
+import android.inputmethodservice.InputMethodService
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.renderscript.ScriptGroup.Input
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.chapter15sunnyweather.R
@@ -23,7 +29,7 @@ import java.util.Locale
 class WeatherActivity : AppCompatActivity() {
 
     lateinit var mBinding:ActivityWeatherBinding
-    private val viewModel by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
+     val viewModel by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +44,7 @@ class WeatherActivity : AppCompatActivity() {
         if (viewModel.placeName.isEmpty()){
             viewModel.placeName=intent.getStringExtra("place_name")?:""
         }
+
         viewModel.weatherLiveData.observe(this, Observer { result->
             val weather=result.getOrNull()
             if (weather!=null){
@@ -46,8 +53,13 @@ class WeatherActivity : AppCompatActivity() {
                 "无法获取天气信息".showToast(Toast.LENGTH_SHORT)
                 result.exceptionOrNull()?.printStackTrace()
             }
+            mBinding.swipeRefresh.isRefreshing=false
         })
-        viewModel.refreshWeather(viewModel.locationLng,viewModel.locationLat)
+        mBinding.swipeRefresh.setColorSchemeResources(com.google.android.material.R.color.design_default_color_primary)
+        refreshWeather()
+        mBinding.swipeRefresh.setOnRefreshListener {
+            refreshWeather()
+        }
         //将任务栏设置和背景图融合到一起，切将颜色改为透明
         // 设置页面全屏显示
         val decorView=window.decorView
@@ -57,6 +69,13 @@ class WeatherActivity : AppCompatActivity() {
         val attr=window.attributes
         attr.layoutInDisplayCutoutMode=WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         window.attributes=attr
+
+        //切换城市
+    }
+
+    fun refreshWeather(){//刷新天气方法
+        viewModel.refreshWeather(viewModel.locationLng,viewModel.locationLat)
+        mBinding.swipeRefresh.isRefreshing=true
     }
 
     private fun showWeatherInfo(weather: Weather) {

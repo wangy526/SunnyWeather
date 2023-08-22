@@ -1,28 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/weatherLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:overScrollMode="never"
-    android:scrollbars="none"
-    android:visibility="invisible">
 
-    <LinearLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/nowLayoutPlaceName"
-            layout="@layout/now" />
+        <ScrollView
+            android:id="@+id/weatherLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:visibility="invisible">
 
-        <include layout="@layout/forecast"
-            android:id="@+id/forecastLayoutPlaceName"
-            />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <include
-            android:id="@+id/lifeIndexLayoutPlaceName"
-            layout="@layout/life_index" />
-    </LinearLayout>
+                <include
+                    android:id="@+id/nowLayoutPlaceName"
+                    layout="@layout/now" />
 
-</ScrollView>
+                <include layout="@layout/forecast"
+                    android:id="@+id/forecastLayoutPlaceName" />
+
+                <include
+                    android:id="@+id/lifeIndexLayoutPlaceName"
+                    layout="@layout/life_index" />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+
+
+

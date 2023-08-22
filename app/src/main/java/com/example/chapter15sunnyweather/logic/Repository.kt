@@ -1,6 +1,7 @@
 package com.example.chapter15sunnyweather.logic
 
 import androidx.lifecycle.liveData
+import com.example.chapter15sunnyweather.logic.dao.PlaceDao
 import com.example.chapter15sunnyweather.logic.model.Place
 import com.example.chapter15sunnyweather.logic.model.Weather
 import com.example.chapter15sunnyweather.logic.network.SunnyWeatherNetwork
@@ -15,6 +16,9 @@ import kotlin.coroutines.CoroutineContext
  * @description：仓库层的统一封装入口
  */
 object Repository {
+    fun savePlace(place: Place)=PlaceDao.savePlace(place)
+    fun getSavedPlace()=PlaceDao.getSavedPlace()
+    fun isPlaceSaved()=PlaceDao.isPlaceSaved()
     fun searchPlaces(query: String) = liveData(Dispatchers.IO) {//运行在子线程中
         val result = try {
             val placeResponse = SunnyWeatherNetwork.searchPlaces(query)

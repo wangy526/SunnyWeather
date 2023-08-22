@@ -16,7 +16,7 @@ import com.example.chapter15sunnyweather.ui.weather.WeatherActivity
  * @date: 2023/8/18
  * @description：placeAdapter
  */
-class PlaceAdapter(private val fragment: Fragment, private val placeList: List<Place>) :
+class PlaceAdapter(private val fragment: PlaceFragment, private val placeList: List<Place>) :
     RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -29,14 +29,16 @@ class PlaceAdapter(private val fragment: Fragment, private val placeList: List<P
 
         val holder=ViewHolder(view)
         holder.itemView.setOnClickListener {
-            val place=placeList[holder.adapterPosition]
-            val intent=Intent(parent.context,WeatherActivity::class.java).apply {
-                putExtra("location_lng",place.location.lng)
-                putExtra("location_lat",place.location.lat)
-                putExtra("place_name",place.name)
-            }
-            fragment.startActivity(intent)
-            fragment.activity?.finish()
+            val position=holder.adapterPosition
+            val place=placeList[position]
+                val intent=Intent(parent.context,WeatherActivity::class.java).apply {
+                    putExtra("location_lng",place.location.lng)
+                    putExtra("location_lat",place.location.lat)
+                    putExtra("place_name",place.name)
+                }
+                fragment.startActivity(intent)
+                fragment.activity?.finish()
+            fragment.viewModel.savePlace(place)
         }
         return holder
     }
