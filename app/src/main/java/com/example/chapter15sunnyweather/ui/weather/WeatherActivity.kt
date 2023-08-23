@@ -6,6 +6,7 @@ import android.inputmethodservice.InputMethodService
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.renderscript.ScriptGroup.Input
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -25,6 +26,7 @@ import com.example.chapter15sunnyweather.showToast
 import com.example.chapter15sunnyweather.ui.place.WeatherViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.math.log
 
 class WeatherActivity : AppCompatActivity() {
 
@@ -71,6 +73,18 @@ class WeatherActivity : AppCompatActivity() {
         window.attributes=attr
 
         //切换城市
+        mBinding.nowLayoutPlaceName.navButton.setOnClickListener {
+            mBinding.drawerLayout.openDrawer(GravityCompat.START)
+        }
+        mBinding.drawerLayout.addDrawerListener(object :DrawerLayout.DrawerListener{
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+            override fun onDrawerOpened(drawerView: View) {}
+            override fun onDrawerStateChanged(newState: Int) {}
+            override fun onDrawerClosed(drawerView: View) {
+                val manager=getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(drawerView.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
+            }
+        })
     }
 
     fun refreshWeather(){//刷新天气方法
